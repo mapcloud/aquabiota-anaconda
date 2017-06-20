@@ -12,7 +12,7 @@ RUN apt-get update --fix-missing && \
     # from https://github.com/ContinuumIO/docker-images/blob/master/anaconda3/Dockerfile
     libglib2.0-0 libxext6 libsm6 libxrender1 \
     # Solving installation-of-package-devtools-had-non-zero-exit-status when R-Kernel is used
-    libssl-dev libcurl4-gnutls-dev libxml2-dev \
+    libssl-dev libcurl4-gnutls-dev libxml2-dev
 
 RUN echo 'export PATH=/opt/conda/bin:$PATH' > /etc/profile.d/conda.sh && \
     wget --quiet https://repo.continuum.io/archive/Anaconda3-4.4.0-Linux-x86_64.sh -O ~/anaconda.sh && \
