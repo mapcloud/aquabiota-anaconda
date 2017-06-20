@@ -5,6 +5,8 @@ FROM aquabiota/phusion-base:16.04
 
 LABEL maintainer "Aquabiota Solutions AB <mapcloud@aquabiota.se>"
 
+ENV PATH /opt/conda/bin:$PATH
+
 
 RUN apt-get update --fix-missing && \
     apt-get -yq dist-upgrade && \
@@ -19,14 +21,19 @@ RUN echo 'export PATH=/opt/conda/bin:$PATH' > /etc/profile.d/conda.sh && \
     /bin/bash ~/anaconda.sh -b -p /opt/conda && \
     rm ~/anaconda.sh
 
-ENV PATH /opt/conda/bin:$PATH
+RUN /opt/conda/bin/conda config --system --add channels conda-forge && \
+    /opt/conda/bin/conda config --system --set auto_update_conda false && \
+    conda clean -tipsy
 
-CMD ["/sbin/my_init"]
+# Installing pip requirements not available through conda
+COPY pip-requirements.txt /tmp/
+RUN pip install --requirement /tmp/pip-requirements.txt
 
 # # Clean up APT when done.
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 # Added a health check
 
+CMD ["/sbin/my_init"]
 # HEALTHCHECK CMD curl --fail http://localhost:2480/ || exit 1
 ## Adding orientdb daemon
 RUN mkdir /etc/service/aquabiota
